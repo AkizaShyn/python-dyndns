@@ -1,0 +1,12 @@
+services:
+  dyndns:
+    image: python-dyndns:latest
+    container_name: ct-python-dyndns
+    hostname: ct-python-dyndns
+    build:
+      context: ../images
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ../logs:/usr/srv/app/logs
