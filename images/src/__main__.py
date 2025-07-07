@@ -1,13 +1,15 @@
 """
 Script de synchronisation DNS IONOS :
-- Récupère l'IP publique du serveur
+- Récupère l'IP publique du serveur qui exécute le script
 - Récupère l'IP actuelle du domaine configuré sur IONOS
 - Compare les deux et logue l'état
+- Met à jour l'ip sur le nom de domaine chez ionos si nécessaire
 
 Nécessite les variables d'environnement :
 - API_KEY
 - ZONE_ID
 - SUFFIX
+- LOG_LEVEL est prédéfinie
 """
 import logging
 import os
@@ -52,7 +54,7 @@ def main():
     logging.getLogger().addHandler(console_handler)
 
 
-
+    # Récupération de l'ip actuelle sur ionos
     url = f"https://api.hosting.ionos.com/dns/v1/zones/{zone_id}"
     headers = {
         "X-API-Key": api_key,
@@ -63,7 +65,6 @@ def main():
         "recordType": "A"
     }
 
-    # récupérer ip sur ionos
     try:
         response = requests.get(url, headers=headers, params=params, timeout=5)
         logging.debug("Contenu de response %s", response.json())
@@ -83,7 +84,7 @@ def main():
     logging.info("Adresse IP enregistrée chez IONOS : %s", ionos_ip)
 
 
-    # récupérer valeur de mon ip
+    # récupérer valeur de mon ip publique
     try:
         my_public_ip = requests.get("https://api.ipify.org", timeout=5).text
         logging.info('Mon adresse publique est : %s', my_public_ip)
@@ -91,7 +92,7 @@ def main():
         logging.critical("Erreur lors de la récupération de l'IP publique : %s", e)
         sys.exit(1)
 
-    # Comparaison
+    # Comparaison si pas égale alors mise à jour chez ionos 
     if ionos_ip != my_public_ip:
         logging.info("L'ip publique est différente de l'ip sur le nom de domaine ionos")
         logging.info("Lancement changement de l'ip du nom de domaine")
@@ -119,7 +120,7 @@ def main():
             logging.critical("Erreur de parsing JSON IONOS : %s", e)
             sys.exit(1)
 
-
+    # Sinon ne rien faire 
     else:
         logging.info("les ip sont identiques")
 
