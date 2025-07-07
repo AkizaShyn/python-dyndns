@@ -92,7 +92,7 @@ def main():
         logging.critical("Erreur lors de la récupération de l'IP publique : %s", e)
         sys.exit(1)
 
-    # Comparaison si pas égale alors mise à jour chez ionos 
+    # Comparaison si pas égale alors mise à jour chez ionos
     if ionos_ip != my_public_ip:
         logging.info("L'ip publique est différente de l'ip sur le nom de domaine ionos")
         logging.info("Lancement changement de l'ip du nom de domaine")
