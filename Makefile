@@ -15,8 +15,7 @@ DOCKER_FILE=-f $(DOCKER_FOLDER)docker-compose.yml
 DOCKER_COMMAND= $(ENV) docker compose -p $(SERVICE_NAME_LOWER) $(DOCKER_FILE)
 
 install:
-	@mkdir -p $(INSTALL_FOLDER)
-	@cp -R $(SECRET_FOLDER)/* $(INSTALL_FOLDER)
+	@cp $(DOCKER_FOLDER)/.env.exemple $(DOCKER_FOLDER)/.env
 
 start:
 	$(DOCKER_COMMAND)  up -d --pull always
