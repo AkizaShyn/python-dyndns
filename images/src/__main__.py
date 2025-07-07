@@ -98,17 +98,15 @@ def main():
         try:
             url = f"https://api.hosting.ionos.com/dns/v1/zones/{zone_id}/records/{ionos_ip_id}"
             headers = {
-                "X-API-Key": api_key
+                "X-API-Key": api_key,
+                "accept": "application/json"
             }
             payload = {
-                "data": {
-                    "type": "record",
-                    "id": ionos_ip_id,
-                    "attributes": {
-                        "content": my_public_ip
-                    }
+                "disabled": False,
+                "content": my_public_ip,
+                "ttl": 3600,
+                "prio": 0
                 }
-            }
             response = requests.put(url, headers=headers, json=payload, timeout=5)
             response.raise_for_status()
             logging.debug("Contenu de response %s", response.json())
