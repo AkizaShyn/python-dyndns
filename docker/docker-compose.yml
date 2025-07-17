@@ -9,4 +9,11 @@ services:
     env_file:
       - .env
     volumes:
-      - ../logs:/usr/srv/app/logs
+      - logs:/usr/srv/app/logs
+volumes:
+  logs:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: "addr=REMPLACE_TO_NFS_SERVER,rw"
+      device: ":REPLACE_TO_PATH_ON_SERVER_NFS"
